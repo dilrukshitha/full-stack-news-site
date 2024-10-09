@@ -20,7 +20,7 @@ const SportsPage = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Sports News</h1>
       <div className="grid grid-cols-3 gap-6">
-        {articles.map((article, index) => (
+      {Array.isArray(articles) && articles?.map((article, index) => (
           <NewsCard 
             key={index}
             title={article.title}
