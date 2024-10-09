@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for your backend API
-const API_URL = process.env.REACT_APP_BACKEND_URL ; // Update this if your backend runs on a different port or URL
+const API_URL = import.meta.env.VITE_BACKEND_URL; // Update this if your backend runs on a different port or URL
 
 // Function to get news by category from MongoDB
 const getNewsByCategory = async (category) => {
