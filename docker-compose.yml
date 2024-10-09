@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Backend (Node/Express) Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URL=mongodb://db:27017/dailyscope  # Connect to MongoDB
+      - JWT_SECRET=1234abc
+    ports:
+      - "5000:5000"  # Expose backend on port 5000
+    depends_on:
+      - db  # Wait for the database to be ready
+    networks:
+      - app-network
+
+  # Frontend (React) Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_BACKEND_URL=http://backend:5000  # Use the backend service name for inter-container communication
+    ports:
+      - "3000:3000"  # Expose frontend on port 3000
+    depends_on:
+      - backend  # Ensure backend is running before starting frontend
+    networks:
+      - app-network
+
+  # Database (MongoDB) Service
+  db:
+    image: mongo:4.4
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db  # Persist data
+    ports:
+      - "27017:27017"  # Expose MongoDB
+    networks:
+      - app-network
+
+# Define Networks
+networks:
+  app-network:
+    driver: bridge
+
+# Define Volumes for persistence
+volumes:
+  mongo-data:
